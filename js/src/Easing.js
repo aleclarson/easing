@@ -1,8 +1,12 @@
-var Easing, NamedFunction, assert, assertType, define, isType, ref;
-
-ref = require("type-utils"), isType = ref.isType, assert = ref.assert, assertType = ref.assertType;
+var Easing, NamedFunction, assert, assertType, define, isType;
 
 NamedFunction = require("NamedFunction");
+
+assertType = require("assertType");
+
+isType = require("isType");
+
+assert = require("assert");
 
 define = require("define");
 

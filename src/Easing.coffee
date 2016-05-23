@@ -1,7 +1,8 @@
 
-{ isType, assert, assertType } = require "type-utils"
-
 NamedFunction = require "NamedFunction"
+assertType = require "assertType"
+isType = require "isType"
+assert = require "assert"
 define = require "define"
 
 module.exports =
