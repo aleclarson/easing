@@ -1,31 +1,57 @@
-var Easing, NamedFunction, assert, assertType, define, isType;
-
-NamedFunction = require("NamedFunction");
+var Type, assertType, isType, type;
 
 assertType = require("assertType");
 
 isType = require("isType");
 
-assert = require("assert");
+Type = require("Type");
 
-define = require("define");
+type = Type("Easing");
 
-module.exports = Easing = NamedFunction("Easing", function(name) {
-  var ease;
-  assertType(name, String);
-  ease = Easing.cache[name];
-  assert(ease, "Easing named '" + name + "' does not exist!");
-  if (!ease.value) {
-    ease.value = ease.init();
-    ease.init = null;
-  }
-  return ease.value;
+type.defineValues(function() {
+  return {
+    _cache: Object.create(null)
+  };
 });
 
-define(Easing, {
+type.initInstance(function() {
+  this.set("linear", function(t) {
+    return t;
+  });
+  this.set("quad", function(t) {
+    return t * t;
+  });
+  return this.set("out.quad", this.out("quad"));
+});
+
+type.defineGetters({
+  names: function() {
+    return Object.keys(this._cache);
+  }
+});
+
+type.defineMethods({
+  set: function(name, ease) {
+    assertType(name, String);
+    assertType(ease, Function);
+    if (this._cache[name]) {
+      throw Error("Easing named '" + name + "' already exists!");
+    }
+    this._cache[name] = ease;
+  },
+  get: function(name) {
+    var ease;
+    assertType(name, String);
+    ease = this._cache[name];
+    if (ease) {
+      return ease;
+    }
+    throw Error("Easing named '" + name + "' does not exist!");
+  },
+  bezier: require("bezier"),
   out: function(ease) {
     if (isType(ease, String)) {
-      ease = Easing(ease);
+      ease = this.get(ease);
     }
     return function(t) {
       return 1 - ease(1 - t);
@@ -33,7 +59,7 @@ define(Easing, {
   },
   inout: function(ease) {
     if (isType(ease, String)) {
-      ease = Easing(ease);
+      ease = this.get(ease);
     }
     return function(t) {
       if (t < 0.5) {
@@ -42,40 +68,16 @@ define(Easing, {
       return 1 - ease((1 - t) * 2) / 2;
     };
   },
-  flipY: function(ease) {
+  reverse: function(ease) {
     if (isType(ease, String)) {
-      ease = Easing(ease);
+      ease = this.get(ease);
     }
     return function(t) {
       return 1 - ease(t);
     };
-  },
-  bezier: require("bezier"),
-  cache: {
-    value: Object.create(null)
-  },
-  register: function(name, ease) {
-    assert(!Easing.cache[name], "Easing named '" + name + "' already exists!");
-    Easing.cache[name] = ease;
   }
 });
 
-Easing.register("linear", {
-  value: function(t) {
-    return t;
-  }
-});
-
-Easing.register("quad", {
-  value: function(t) {
-    return t * t;
-  }
-});
-
-Easing.register("out.quad", {
-  init: function() {
-    return Easing.out("quad");
-  }
-});
+module.exports = type.construct();
 
 //# sourceMappingURL=map/Easing.map
