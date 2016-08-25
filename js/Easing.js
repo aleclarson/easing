@@ -78,4 +78,4 @@ Easing.register("out.quad", {
   }
 });
 
-//# sourceMappingURL=../../map/src/Easing.map
+//# sourceMappingURL=map/Easing.map
