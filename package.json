@@ -1,13 +1,11 @@
 {
   "name": "easing",
-  "version": "1.0.0",
-  "main": "./js/src/Easing",
+  "version": "2.0.0",
+  "main": "js/Easing",
   "dependencies": {
-    "NamedFunction": "aleclarson/NamedFunction#2.0.0",
-    "assert": "aleclarson/assert#1.0.0",
-    "assertType": "aleclarson/assertType#1.0.0",
+    "Type": "aleclarson/Type#1.1.0",
+    "assertType": "aleclarson/assertType#2.0.0",
     "bezier": "aleclarson/bezier#1.0.0",
-    "define": "aleclarson/define#1.0.0",
     "isType": "aleclarson/isType#1.0.0"
   },
   "lotus": {

@@ -1,45 +1,55 @@
 
-NamedFunction = require "NamedFunction"
 assertType = require "assertType"
 isType = require "isType"
-assert = require "assert"
-define = require "define"
+Type = require "Type"
 
-module.exports =
-Easing = NamedFunction "Easing", (name) ->
-  assertType name, String
-  ease = Easing.cache[name]
-  assert ease, "Easing named '#{name}' does not exist!"
-  unless ease.value
-    ease.value = ease.init()
-    ease.init = null
-  return ease.value
+type = Type "Easing"
 
-define Easing,
+type.defineValues ->
+
+  _cache: Object.create null
+
+type.initInstance ->
+  @set "linear", (t) -> t
+  @set "quad", (t) -> t * t
+  @set "out.quad", @out "quad"
+
+type.defineGetters
+
+  names: -> Object.keys @_cache
+
+type.defineMethods
+
+  set: (name, ease) ->
+    assertType name, String
+    assertType ease, Function
+
+    if @_cache[name]
+      throw Error "Easing named '#{name}' already exists!"
+
+    @_cache[name] = ease
+    return
+
+  get: (name) ->
+    assertType name, String
+    ease = @_cache[name]
+    return ease if ease
+    throw Error "Easing named '#{name}' does not exist!"
+
+  bezier: require "bezier"
 
   out: (ease) ->
-    ease = Easing ease if isType ease, String
+    ease = @get ease if isType ease, String
     return (t) -> 1 - ease 1 - t
 
   inout: (ease) ->
-    ease = Easing ease if isType ease, String
+    ease = @get ease if isType ease, String
     return (t) ->
       return ease(t * 2) / 2 if t < 0.5
       return 1 - ease((1 - t) * 2) / 2
 
-  flipY: (ease) ->
-    ease = Easing ease if isType ease, String
+  reverse: (ease) ->
+    ease = @get ease if isType ease, String
     return (t) -> 1 - ease t
 
-  bezier: require "bezier"
-
-  cache: value: Object.create null
-
-  register: (name, ease) ->
-    assert not Easing.cache[name], "Easing named '#{name}' already exists!"
-    Easing.cache[name] = ease
-    return
-
-Easing.register "linear", value: (t) -> t
-Easing.register "quad", value: (t) -> t * t
-Easing.register "out.quad", init: -> Easing.out "quad"
+module.exports = type.construct()
