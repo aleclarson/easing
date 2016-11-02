@@ -4,19 +4,18 @@
 ```coffee
 Easing = require "easing"
 
-# Get cached easing functions
-ease = Easing.get "linear"
-ease 0 # => 0
-ease 1 # => 1
+Easing.linear
+Easing.quad
+Easing.pow 3
+Easing.bezier 0, 0, 1, 1
+Easing.elastic 0.8
 
-# Cache your own easing functions
-Easing.set "custom", (t) -> Math.pow t, 2
+# Modify the output of an easing function
+Easing.flipXY easeFn
+Easing.flipX easeFn
+Easing.flipY easeFn
+Easing.inout easeFn
 
-Easing.names # => [ "linear", "quad", "quad.out", "custom" ]
-
-# Comes with these easing modifiers
-easeOut = Easing.out ease
-easeIn = Easing.in ease
-easeInOut = Easing.inout ease
-easeReversed = Easing.reverse ease
+# Composition scoping
+easeOutQuad = Easing -> @flipXY @quad
 ```
