@@ -31,4 +31,10 @@ Object.assign Easing,
     then 0.5 * ease 2 * t
     else 1 - 0.5 * ease 2 * (1 - t)
 
+Object.assign Easing,
+
+  outQuad: Easing -> @flipXY @quad
+
+  outPow: (e) -> Easing.flipXY Easing.pow e
+
 module.exports = Easing
