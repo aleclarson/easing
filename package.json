@@ -1,0 +1,10 @@
+{
+  "name": "easing",
+  "version": "3.1.0",
+  "main": "js/Easing",
+  "dependencies": {
+    "NamedFunction": "aleclarson/NamedFunction#2.0.1",
+    "bezier": "aleclarson/bezier#1.0.0",
+    "isType": "aleclarson/isType#1.0.1"
+  }
+}
